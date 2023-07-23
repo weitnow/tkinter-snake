@@ -2,7 +2,7 @@ import tkinter as tk
 from PIL import Image, ImageTk
 
 MOVE_INCREMENT = 20
-MOVES_PER_SECOND = 15
+MOVES_PER_SECOND = 10
 GAME_SPEED = 1000 // MOVES_PER_SECOND
 
 class Snake(tk.Canvas):
@@ -12,12 +12,13 @@ class Snake(tk.Canvas):
         self.snake_positions = [(100, 100), (80, 100), (60, 100)]
         self.food_position = (200, 100)
         self.score = 0
+        self.direction = "Right"
+        self.bind_all("<Key>", self.on_key_press)
 
         self.load_assets()
         self.create_objects()
 
         self.after(GAME_SPEED, self.perform_actions)
-        #self.perform_actions()
 
     def load_assets(self):
         try:
@@ -40,13 +41,24 @@ class Snake(tk.Canvas):
 
     def move_snake(self):
         head_x_position, head_y_position = self.snake_positions[0]
-        new_head_position = (head_x_position + MOVE_INCREMENT, head_y_position)
+
+        if self.direction == "Left":
+            new_head_position = (head_x_position - MOVE_INCREMENT, head_y_position)
+        elif self.direction == "Right":
+            new_head_position = (head_x_position + MOVE_INCREMENT, head_y_position)
+        elif self.direction == "Down":
+            new_head_position = (head_x_position, head_y_position + MOVE_INCREMENT)
+        elif self.direction == "Up":
+            new_head_position = (head_x_position, head_y_position - MOVE_INCREMENT)
+
         self.snake_positions = [new_head_position] + self.snake_positions[:-1]
 
         for segment, position in zip(self.find_withtag("snake"), self.snake_positions):
             self.coords(segment, position)
 
     def perform_actions(self):
+        if self.check_collisions():
+            return
         self.move_snake()
         self.after(GAME_SPEED, self.perform_actions)
 
@@ -58,6 +70,20 @@ class Snake(tk.Canvas):
             or head_y_position in (20, 620)
             or (head_x_position, head_y_position) in self.snake_positions[1:]
         )
+
+    def on_key_press(self, e):
+        new_direction = e.keysym
+        if new_direction == 'w':
+            new_direction = 'Up'
+        elif new_direction == 'a':
+            new_direction = 'Left'
+        elif new_direction == 's':
+            new_direction = 'Down'
+        elif new_direction == 'd':
+            new_direction = 'Right'
+
+        self.direction = new_direction
+
 
 root = tk.Tk()
 root.title("Snake")
