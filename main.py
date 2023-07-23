@@ -8,7 +8,7 @@ class Snake(tk.Canvas):
         self.snake_positions = [(100, 100), (80, 100), (60, 100)]
 
         self.load_assets()
-        self.create_objects()
+        #self.create_objects()
 
     def load_assets(self):
         try:
@@ -21,7 +21,8 @@ class Snake(tk.Canvas):
             print(error)
             root.destroy()
 
-    def create_asstes(self):
+    def create_assets(self):
+        pass
 
 
 root = tk.Tk()
