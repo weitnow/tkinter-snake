@@ -87,6 +87,9 @@ class Snake(tk.Canvas):
         elif new_direction == 'd':
             new_direction = 'Right'
 
+        if new_direction == "n":
+            print("n")
+
         all_directions = ("Up", "Down", "Left", "Right")
         opposites = ({"Up", "Down"}, {"Left", "Right"})
 
